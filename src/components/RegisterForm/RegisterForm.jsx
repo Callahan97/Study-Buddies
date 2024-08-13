@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import './RegisterForm.css';
 
 function RegisterForm() {
+  const [firstname, setFirstName] = useState('');
+  const [lastname, setLastName] = useState('')
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
@@ -16,6 +18,8 @@ function RegisterForm() {
     dispatch({
       type: 'REGISTER',
       payload: {
+        firstname: firstname,
+        lastname: lastname,
         username: username,
         password: password,
         role: role,
@@ -50,6 +54,30 @@ function RegisterForm() {
             value={username}
             required
             onChange={(event) => setUsername(event.target.value)}
+          />
+        </label>
+      </div>
+      <div>
+        <label htmlFor="firstname">
+          First name:
+          <input
+            type="text"
+            name="First name"
+            value={firstname}
+            required
+            onChange={(event) => setFirstName(event.target.value)}
+          />
+        </label>
+      </div>
+      <div>
+        <label htmlFor="lastname">
+          Last name:
+          <input
+            type="text"
+            name="Last name"
+            value={lastname}
+            required
+            onChange={(event) => setLastName(event.target.value)}
           />
         </label>
       </div>
