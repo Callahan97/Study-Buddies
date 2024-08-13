@@ -1,0 +1,33 @@
+.role-selection {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .role-button {
+    padding: 10px 20px;
+    margin: 0 5px;
+    border: 2px solid #ccc;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.1s;
+  }
+  
+  .role-button.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    transform: translateY(2px); 
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); 
+  }
+  
+  .role-button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .role-button.selected:hover {
+    background-color: #0069d9;
+  }
