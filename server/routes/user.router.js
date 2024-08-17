@@ -60,6 +60,57 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
+
+router.put('/', rejectUnauthenticated, async (req, res) => {
+  const { username, firstname, lastname, password, disciplines } = req.body;
+  const userId = req.user.id;
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    let updateQuery;
+    let queryValues;
+
+    
+    if (password) {
+      const encryptedPassword = encryptLib.encryptPassword(password);
+      updateQuery = `
+        UPDATE "user" 
+        SET username = $1, firstname = $2, lastname = $3, password = $4
+        WHERE id = $5`;
+      queryValues = [username, firstname, lastname, encryptedPassword, userId];
+    } else {
+      updateQuery = `
+        UPDATE "user" 
+        SET username = $1, firstname = $2, lastname = $3
+        WHERE id = $4`;
+      queryValues = [username, firstname, lastname, userId];
+    }
+
+    await client.query(updateQuery, queryValues);
+
+    
+    if (req.user.role === 'tutor' && disciplines) {
+      await client.query(`DELETE FROM "user_disciplines" WHERE user_id = $1`, [userId]);
+
+      const disciplineInsertQuery = `INSERT INTO "user_disciplines" (discipline_id, user_id) VALUES ($1, $2)`;
+      for (let discipline of disciplines) {
+        await client.query(disciplineInsertQuery, [discipline, userId]);
+      }
+    }
+
+    await client.query('COMMIT');
+    res.sendStatus(200);
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Error updating user profile:', err);
+    res.sendStatus(500);
+  } finally {
+    client.release();
+  }
+});
+
 // Handles login form authenticate/login POST
 // userStrategy.authenticate('local') is middleware that we run on this route
 // this middleware will run our POST if successful
