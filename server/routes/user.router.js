@@ -14,6 +14,16 @@ router.get('/', rejectUnauthenticated, (req, res) => {
   res.send(req.user);
 });
 
+router.get('/disciplines', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM disciplines');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching disciplines:', err);
+    res.sendStatus(500);
+  }
+});
+
 // Handles POST request with new user data
 router.post('/register', async (req, res, next) => {
   const username = req.body.username;
@@ -21,35 +31,33 @@ router.post('/register', async (req, res, next) => {
   const lastname = req.body.lastname;
   const password = encryptLib.encryptPassword(req.body.password);
   const role = req.body.role;
-  const disciplines = req.body.disciplines || [];
+  const discipline = req.body.discipline || '';
 
   const client = await pool.connect();
 
   try {
     await client.query('BEGIN');
 
-    const userCheckQuery = `SELECT id FROM "user" WHERE username = $1`;
-    const userCheckResult = await client.query(userCheckQuery, [username]);
-
-    if (userCheckResult.rows.length > 0) {
-      res.status(409).json({message: 'Username already exists.'});
-      await client.query('ROLLBACK');
-      return
-    }
-  
-
-  const userInsertQuery = `INSERT INTO "user" (username, firstname, lastname, password, role)
-    VALUES ($1, $2, $3, $4, $5) RETURNING id`;
+    const userInsertQuery = `INSERT INTO "user" (username, firstname, lastname, password, role)
+      VALUES ($1, $2, $3, $4, $5) RETURNING id`;
     const userResult = await client.query(userInsertQuery, [username, firstname, lastname, password, role]);
     const userId = userResult.rows[0].id;
- 
-    if (role === 'tutor' && disciplines.length > 0) { 
-      const disciplineInsertQuery = `INSERT INTO "user_disciplines" (discipline_id, user_id) VALUES ($1, $2)`;
-      for (let discipline of disciplines) {
-        await client.query(disciplineInsertQuery, [discipline, userId]);
+
+    if (role === 'tutor' && discipline) {
+      const disciplineCheckQuery = `SELECT id FROM disciplines WHERE name = $1`;
+      let disciplineIdResult = await client.query(disciplineCheckQuery, [discipline]);
+
+      if (disciplineIdResult.rows.length === 0) {
+        const disciplineInsertQuery = `INSERT INTO disciplines (name) VALUES ($1) RETURNING id`;
+        disciplineIdResult = await client.query(disciplineInsertQuery, [discipline]);
       }
+      const disciplineId = disciplineIdResult.rows[0].id;
+
+      const associateDisciplineQuery = `INSERT INTO user_disciplines (user_id, discipline_id) VALUES ($1, $2)`;
+      await client.query(associateDisciplineQuery, [userId, disciplineId]);
     }
-    await client.query('COMMIT'); 
+
+    await client.query('COMMIT');
     res.sendStatus(201);
   } catch (err) {
     await client.query('ROLLBACK');
@@ -62,7 +70,7 @@ router.post('/register', async (req, res, next) => {
 
 
 router.put('/', rejectUnauthenticated, async (req, res) => {
-  const { username, firstname, lastname, password, disciplines } = req.body;
+  const { username, firstname, lastname, password, discipline } = req.body;
   const userId = req.user.id;
   const client = await pool.connect();
 
@@ -72,7 +80,6 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
     let updateQuery;
     let queryValues;
 
-    
     if (password) {
       const encryptedPassword = encryptLib.encryptPassword(password);
       updateQuery = `
@@ -90,14 +97,20 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
 
     await client.query(updateQuery, queryValues);
 
-    
-    if (req.user.role === 'tutor' && disciplines) {
-      await client.query(`DELETE FROM "user_disciplines" WHERE user_id = $1`, [userId]);
+    if (req.user.role === 'tutor' && discipline) {
+      const disciplineCheckQuery = `SELECT id FROM disciplines WHERE name = $1`;
+      let disciplineIdResult = await client.query(disciplineCheckQuery, [discipline]);
 
-      const disciplineInsertQuery = `INSERT INTO "user_disciplines" (discipline_id, user_id) VALUES ($1, $2)`;
-      for (let discipline of disciplines) {
-        await client.query(disciplineInsertQuery, [discipline, userId]);
+      if (disciplineIdResult.rows.length === 0) {
+        const disciplineInsertQuery = `INSERT INTO disciplines (name) VALUES ($1) RETURNING id`;
+        disciplineIdResult = await client.query(disciplineInsertQuery, [discipline]);
       }
+
+      const disciplineId = disciplineIdResult.rows[0].id;
+
+      await client.query('DELETE FROM user_disciplines WHERE user_id = $1', [userId]);
+      const associateDisciplineQuery = `INSERT INTO user_disciplines (user_id, discipline_id) VALUES ($1, $2)`;
+      await client.query(associateDisciplineQuery, [userId, disciplineId]);
     }
 
     await client.query('COMMIT');

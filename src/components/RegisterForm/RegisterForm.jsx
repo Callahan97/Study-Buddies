@@ -9,7 +9,7 @@ function RegisterForm() {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
   const errors = useSelector((store) => store.errors);
-  const [disciplines, setDisciplines] = useState([]);
+  const [discipline, setDiscipline] = useState('');
   const dispatch = useDispatch();
 
   const registerUser = (event) => {
@@ -23,19 +23,11 @@ function RegisterForm() {
         username: username,
         password: password,
         role: role,
-        disciplines: role === 'tutor' ? disciplines : [],
+        discipline: role === 'tutor' ? discipline : '',
       },
     });
   }; 
 
-  const handleDisciplineChange = (event) => {
-    const value = event.target.value;
-    setDisciplines((prevDisciplines) =>
-      prevDisciplines.includes(value)
-        ? prevDisciplines.filter((discipline) => discipline !== value)
-        : [...prevDisciplines, value]
-    );
-  };
 
   return (
     <form className="formPanel" onSubmit={registerUser}>
@@ -112,41 +104,41 @@ function RegisterForm() {
       </div>
       {role === 'tutor' && (
         <div>
-          <label>Select Disciplines:</label>
+          <label>Select Discipline:</label>
           <div>
             <label>
               <input
-                type="checkbox"
+                type="radio"
                 value="History"
-                onChange={handleDisciplineChange}
-                checked={disciplines.includes('History')}
+                onChange={(e) => setDiscipline(e.target.value)}
+                checked={discipline === 'History'}
               />
               History
             </label>
             <label>
               <input
-                type="checkbox"
+                type="radio"
                 value="Science"
-                onChange={handleDisciplineChange}
-                checked={disciplines.includes('Science')}
+                onChange={(e) => setDiscipline(e.target.value)}
+                checked={discipline === 'Science'}
               />
               Science
             </label>
             <label>
               <input
-                type="checkbox"
+                type="radio"
                 value="Math"
-                onChange={handleDisciplineChange}
-                checked={disciplines.includes('Math')}
+                onChange={(e) => setDiscipline(e.target.value)}
+                checked={discipline === 'Math'}
               />
               Math
             </label>
             <label>
               <input
-                type="checkbox"
+                type="radio"
                 value="English"
-                onChange={handleDisciplineChange}
-                checked={disciplines.includes('English')}
+                onChange={(e) => setDiscipline(e.target.value)}
+                checked={discipline === 'English'}
               />
               English
             </label>
