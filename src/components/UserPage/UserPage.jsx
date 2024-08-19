@@ -2,10 +2,12 @@ import React, {useState, useEffect} from 'react';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 function UserPage() {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
+  const history = useHistory(); 
 
   const [username, setUsername] = useState(user.username);
   const [firstname, setFirstname] = useState(user.firstname);
@@ -48,6 +50,10 @@ function UserPage() {
       console.error('Error updating profile:', error);
       alert('Failed to update profile');
     }
+  };
+
+  const goToAvailabilityPage = () => {
+    history.push('/availability');
   };
 
   return (
@@ -131,6 +137,9 @@ function UserPage() {
 
       <p>Your ID is: {user.id}</p>
       <LogOutButton className="btn" />
+      {user.role === 'tutor' && (
+      <button className="btn" onClick={goToAvailabilityPage}>Manage Availability</button>
+      )}
     </div>
   );
 }
