@@ -13,13 +13,22 @@ function UserPage() {
   const [firstname, setFirstname] = useState(user.firstname);
   const [lastname, setLastname] = useState(user.lastname);
   const [password, setPassword] = useState('');
-  const [discipline, setDiscipline] = useState(user.disciplines ? user.disciplines[0]?.id : '');
+  const [discipline, setDiscipline] = useState(user.discipline || '');
   const [availableDisciplines, setAvailableDisciplines] = useState([]);
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     if (user.role === 'tutor') {
-      axios.get('/api/user/disciplines')
+      axios.get('/api/discipline/user/' + user.id)
+        .then((response) => {
+          console.log('User Disciplines:', response.data);
+          setDiscipline(response.data[0]?.name || '');
+        })
+        .catch((error) => {
+          console.error('Error fetching user disciplines:', error);
+        });
+  
+      axios.get('/api/discipline')
         .then((response) => {
           console.log('Available Disciplines:', response.data);
           setAvailableDisciplines(response.data);
@@ -28,7 +37,7 @@ function UserPage() {
           console.error('Error fetching disciplines:', error);
         });
     }
-  }, [user.role]);
+  }, [user.role, user.id]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -37,13 +46,14 @@ function UserPage() {
       firstname,
       lastname,
       password: password ? password : undefined,
-      discipline: user.role === 'tutor' ? discipline : undefined,
     };
-    console.log('Updated User Data:', updatedUser);
-
+    
     try {
       await axios.put('/api/user', updatedUser);
-      dispatch({ type: 'SET_USER', payload: updatedUser });
+      if (user.role === 'tutor') {
+        await axios.put('/api/discipline/user/' + user.id, { discipline });
+      }
+      dispatch({ type: 'FETCH_USER' });
       alert('Profile updated successfully');
       setEditMode(false); 
     } catch (error) {

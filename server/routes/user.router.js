@@ -9,17 +9,17 @@ const userStrategy = require('../strategies/user.strategy');
 const router = express.Router();
 
 // Handles Ajax request for user information if user is authenticated
-router.get('/', rejectUnauthenticated, (req, res) => {
-  // Send back user object from the session (previously queried from the database)
-  res.send(req.user);
-});
-
-router.get('/disciplines', async (req, res) => {
+router.get('/', rejectUnauthenticated, async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM disciplines');
-    res.json(result.rows);
-  } catch (err) {
-    console.error('Error fetching disciplines:', err);
+    const userId = req.user.id;
+    const userQuery = `SELECT id, firstname, lastname, username, role FROM "user" WHERE id = $1`;
+
+    const userResult = await pool.query(userQuery, [userId]);
+    const user = userResult.rows[0];
+
+    res.send(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
     res.sendStatus(500);
   }
 });
@@ -31,7 +31,6 @@ router.post('/register', async (req, res, next) => {
   const lastname = req.body.lastname;
   const password = encryptLib.encryptPassword(req.body.password);
   const role = req.body.role;
-  const discipline = req.body.discipline || '';
 
   const client = await pool.connect();
 
@@ -42,20 +41,6 @@ router.post('/register', async (req, res, next) => {
       VALUES ($1, $2, $3, $4, $5) RETURNING id`;
     const userResult = await client.query(userInsertQuery, [username, firstname, lastname, password, role]);
     const userId = userResult.rows[0].id;
-
-    if (role === 'tutor' && discipline) {
-      const disciplineCheckQuery = `SELECT id FROM disciplines WHERE name = $1`;
-      let disciplineIdResult = await client.query(disciplineCheckQuery, [discipline]);
-
-      if (disciplineIdResult.rows.length === 0) {
-        const disciplineInsertQuery = `INSERT INTO disciplines (name) VALUES ($1) RETURNING id`;
-        disciplineIdResult = await client.query(disciplineInsertQuery, [discipline]);
-      }
-      const disciplineId = disciplineIdResult.rows[0].id;
-
-      const associateDisciplineQuery = `INSERT INTO user_disciplines (user_id, discipline_id) VALUES ($1, $2)`;
-      await client.query(associateDisciplineQuery, [userId, disciplineId]);
-    }
 
     await client.query('COMMIT');
     res.sendStatus(201);
@@ -70,7 +55,7 @@ router.post('/register', async (req, res, next) => {
 
 
 router.put('/', rejectUnauthenticated, async (req, res) => {
-  const { username, firstname, lastname, password, discipline } = req.body;
+  const { username, firstname, lastname, password } = req.body;
   const userId = req.user.id;
   const client = await pool.connect();
 
@@ -96,22 +81,6 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
     }
 
     await client.query(updateQuery, queryValues);
-
-    if (req.user.role === 'tutor' && discipline) {
-      const disciplineCheckQuery = `SELECT id FROM disciplines WHERE name = $1`;
-      let disciplineIdResult = await client.query(disciplineCheckQuery, [discipline]);
-
-      if (disciplineIdResult.rows.length === 0) {
-        const disciplineInsertQuery = `INSERT INTO disciplines (name) VALUES ($1) RETURNING id`;
-        disciplineIdResult = await client.query(disciplineInsertQuery, [discipline]);
-      }
-
-      const disciplineId = disciplineIdResult.rows[0].id;
-
-      await client.query('DELETE FROM user_disciplines WHERE user_id = $1', [userId]);
-      const associateDisciplineQuery = `INSERT INTO user_disciplines (user_id, discipline_id) VALUES ($1, $2)`;
-      await client.query(associateDisciplineQuery, [userId, disciplineId]);
-    }
 
     await client.query('COMMIT');
     res.sendStatus(200);
