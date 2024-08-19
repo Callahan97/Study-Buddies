@@ -13,19 +13,21 @@ function UserPage() {
   const [firstname, setFirstname] = useState(user.firstname);
   const [lastname, setLastname] = useState(user.lastname);
   const [password, setPassword] = useState('');
-  const [discipline, setDiscipline] = useState(user.discipline || '');
+  const [discipline, setDiscipline] = useState('');
   const [availableDisciplines, setAvailableDisciplines] = useState([]);
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     if (user.role === 'tutor') {
-      axios.get('/api/discipline/user/' + user.id)
+      axios.get(`/api/discipline/user/${user.id}`)
         .then((response) => {
-          console.log('User Disciplines:', response.data);
-          setDiscipline(response.data[0]?.name || '');
+          console.log('Discipline:', response.data);
+          if (response.data.length > 0) {
+            setDiscipline(response.data[0].name);
+          }
         })
         .catch((error) => {
-          console.error('Error fetching user disciplines:', error);
+          console.error('Error fetching discipline:', error);
         });
   
       axios.get('/api/discipline')
@@ -34,10 +36,10 @@ function UserPage() {
           setAvailableDisciplines(response.data);
         })
         .catch((error) => {
-          console.error('Error fetching disciplines:', error);
+          console.error('Error fetching available disciplines:', error);
         });
     }
-  }, [user.role, user.id]);
+  }, [user.id, user.role]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -47,11 +49,11 @@ function UserPage() {
       lastname,
       password: password ? password : undefined,
     };
-    
+    console.log('Updated User Data:', updatedUser);
     try {
       await axios.put('/api/user', updatedUser);
-      if (user.role === 'tutor') {
-        await axios.put('/api/discipline/user/' + user.id, { discipline });
+      if (user.role === 'tutor' && discipline) {
+        await axios.put(`/api/discipline/user/${user.id}`, { discipline });
       }
       dispatch({ type: 'FETCH_USER' });
       alert('Profile updated successfully');
@@ -148,7 +150,7 @@ function UserPage() {
       <p>Your ID is: {user.id}</p>
       <LogOutButton className="btn" />
       {user.role === 'tutor' && (
-      <button className="btn" onClick={goToAvailabilityPage}>Manage Availability</button>
+        <button className="btn" onClick={goToAvailabilityPage}>Manage Availability</button>
       )}
     </div>
   );
