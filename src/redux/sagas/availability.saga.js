@@ -24,9 +24,9 @@ function* updateAvailability(action) {
 
 function* fetchTutorAvailability(action) {
   try {
-    const { startDate, endDate, discipline } = action.payload;
+    const { startTime, endTime, discipline } = action.payload;
     const response = yield axios.get('/api/tutor_availability/week', {
-      params: { startDate, endDate, discipline },
+      params: { startTime, endTime, discipline },
     });
     yield put({ type: 'SET_TUTOR_AVAILABILITY', payload: response.data });
   } catch (error) {

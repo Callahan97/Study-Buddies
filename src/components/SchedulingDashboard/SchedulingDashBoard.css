@@ -1,0 +1,106 @@
+.scheduling-dashboard {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .week-selector-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #756e57;
+    padding: 10px 20px;
+    border-radius: 50px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px 0; 
+    border: 1px solid #ccc; 
+    width: 100%; 
+  }
+  
+  .arrow {
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #b89214;
+    transition: background-color 0.3s;
+  }
+  
+  .arrow:hover {
+    background-color: #d0d0d0;
+  }
+  
+  .week-selector-container select {
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    outline: none;
+  }
+  
+  .availability-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .availability-header, .availability-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 2fr 1fr;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .availability-header span {
+    border-right: 1px solid #ddd;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .availability-header span:last-child {
+    border-right: none;
+  }
+  
+  .availability-row {
+    border-bottom: 1px solid #e0e0e0; 
+  }
+  
+  .availability-row span {
+    border-right: 1px solid #e0e0e0; 
+    padding: 5px;
+  }
+  
+  .availability-row span:last-child {
+    border-right: none; 
+  }
+  
+  .date-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .date-column span:first-child {
+    font-weight: bold;
+  }
+  
+  .day-of-week {
+    font-size: 0.9em;
+    color: #666;
+  }
+  
+  .no-availability {
+    grid-column: span 5;
+    color: #999;
+  }
+  
+  .book-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .book-button:hover {
+    background-color: #45a049;
+  }
+  
