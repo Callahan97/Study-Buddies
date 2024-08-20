@@ -11,6 +11,7 @@ const passport = require('./strategies/user.strategy');
 const userRouter = require('./routes/user.router');
 const availabilityRouter = require('./routes/availability.router');
 const disciplineRouter = require('./routes/discipline.router');
+const bookingsRouter = require('./routes/bookings.router');
 
 // Express Middleware
 app.use(express.json());
@@ -28,6 +29,7 @@ app.use(passport.session());
 app.use('/api/user', userRouter);
 app.use('/api/tutor_availability', availabilityRouter);
 app.use('/api/discipline', disciplineRouter);
+app.use('/api/bookings', bookingsRouter); 
 
 // Listen Server & Port
 app.listen(PORT, () => {

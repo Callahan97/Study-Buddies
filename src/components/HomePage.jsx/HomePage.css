@@ -1,0 +1,86 @@
+.homepage {
+    padding: 20px;
+  }
+  
+  .page-title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .booked-sessions-table {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border-collapse: collapse;
+  }
+  
+  .table-header,
+  .table-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; 
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .table-header span {
+    border-right: 1px solid #ddd;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .table-header span:last-child {
+    border-right: none;
+  }
+  
+  .table-row span {
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .table-row span:last-child {
+    border-right: none;
+  }
+  
+  .edit-button, .delete-button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .edit-button {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .delete-button {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .edit-button:hover {
+    background-color: #45a049;
+  }
+  
+  .delete-button:hover {
+    background-color: #e53935;
+  }
+  
+  .btn {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn:hover {
+    background-color: #0056b3;
+  }
