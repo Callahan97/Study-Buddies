@@ -5,6 +5,7 @@ import './SchedulingDashboard.css';
 
 function SchedulingDashboard() {
   const dispatch = useDispatch();
+  const currentUser = useSelector((store) => store.user);
   const tutorAvailability = useSelector((store) => store.availability.tutorAvailability);
   const [selectedDiscipline, setSelectedDiscipline] = useState('');
   const [currentWeekStart, setCurrentWeekStart] = useState(moment().startOf('week'));
@@ -30,6 +31,24 @@ function SchedulingDashboard() {
     }
   };
 
+  const handleBooking = (availability) => {
+    const dayIndex = moment().day(availability.day_of_week).day();
+    const date = currentWeekStart.clone().add(dayIndex, 'days').format('YYYY-MM-DD');
+  
+    const bookingDetails = {
+      tutor_id: availability.tutor_id,
+      tutee_id: currentUser.id,
+      date: date,
+      start_time: availability.start_time,
+      end_time: availability.end_time,
+    };
+  
+    dispatch({
+      type: 'BOOK_SESSION',
+      payload: bookingDetails,
+    });
+  };
+  
   const handleNextWeek = () => {
     setCurrentWeekStart(currentWeekStart.clone().add(1, 'week'));
   };
@@ -104,7 +123,7 @@ function SchedulingDashboard() {
                       </span>
                       <span>{availability.firstname} {availability.lastname}</span>
                       <span>
-                        <button className="book-button">Book Now</button>
+                      <button className="book-button" onClick={() => handleBooking(availability)}>Book Now</button>
                       </span>
                     </React.Fragment>
                   ))

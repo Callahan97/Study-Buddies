@@ -34,10 +34,19 @@ function* fetchTutorAvailability(action) {
   }
 }
 
+function* bookSession(action) {
+  try {
+    yield axios.post('/api/tutor_availability/book', action.payload);
+  } catch (error) {
+    console.error('Error booking session:', error);
+  }
+}
+
 function* availabilitySaga() {
   yield takeLatest('FETCH_AVAILABILITY', fetchAvailability);
   yield takeLatest('UPDATE_AVAILABILITY', updateAvailability);
   yield takeLatest('FETCH_TUTOR_AVAILABILITY', fetchTutorAvailability);
+  yield takeLatest('BOOK_SESSION', bookSession);
 }
 
 export default availabilitySaga;
