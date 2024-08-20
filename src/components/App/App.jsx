@@ -15,14 +15,14 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
-import InfoPage from '../HomePage.jsx/HomePage';
+import HomePage from '../HomePage.jsx/HomePage';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import AvailabilityForm from '../AvailabilityForm/AvailabilityForm';
-
+import SchedulingDashboard from '../SchedulingDashboard/SchedulingDashboard';
 import './App.css';
-import HomePage from '../HomePage.jsx/HomePage';
+
 
 function App() {
   const dispatch = useDispatch();
@@ -76,6 +76,10 @@ function App() {
             path="/availability"
           >
           <AvailabilityForm />
+          </ProtectedRoute>
+
+          <ProtectedRoute exact path="/scheduling-dashboard">
+            <SchedulingDashboard />
           </ProtectedRoute>
 
           <Route

@@ -22,9 +22,22 @@ function* updateAvailability(action) {
   }
 }
 
+function* fetchTutorAvailability(action) {
+  try {
+    const { startDate, endDate, discipline } = action.payload;
+    const response = yield axios.get('/api/tutor_availability/week', {
+      params: { startDate, endDate, discipline },
+    });
+    yield put({ type: 'SET_TUTOR_AVAILABILITY', payload: response.data });
+  } catch (error) {
+    console.error('Error fetching tutor availability:', error);
+  }
+}
+
 function* availabilitySaga() {
   yield takeLatest('FETCH_AVAILABILITY', fetchAvailability);
   yield takeLatest('UPDATE_AVAILABILITY', updateAvailability);
+  yield takeLatest('FETCH_TUTOR_AVAILABILITY', fetchTutorAvailability);
 }
 
 export default availabilitySaga;

@@ -13,6 +13,26 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     });
 });
 
+router.get('/week', rejectUnauthenticated, (req, res) => {
+  const { startDate, endDate, discipline } = req.query;
+
+  const queryText = `
+    SELECT u.firstname, u.lastname, ta.day_of_week, ta.start_time, ta.end_time
+    FROM tutor_availability ta
+    JOIN "user" u ON ta.user_id = u.id
+    JOIN user_disciplines ud ON ud.user_id = u.id
+    JOIN disciplines d ON d.id = ud.discipline_id
+    WHERE d.name = $1 AND ta.day_of_week >= $2 AND ta.day_of_week <= $3
+  `;
+
+  pool.query(queryText, [discipline, startDate, endDate])
+    .then(result => res.json(result.rows))
+    .catch(error => {
+      console.error('Error fetching availability for the week:', error);
+      res.sendStatus(500);
+    });
+});
+
 router.put('/', rejectUnauthenticated, (req, res) => {
   const availability = req.body;
   const userId = req.user.id;
