@@ -55,9 +55,9 @@ function HomePage() {
                   : `${session.tutor_firstname} ${session.tutor_lastname}`}
               </span>
               <span>
-                <button className="edit-button">Edit</button>
-                <button className="delete-button">Delete</button>
-              </span> {/* Added Edit and Delete buttons */}
+              
+                <button className="delete-button">Cancel Session</button>
+              </span> 
             </div>
           ))
         ) : (

@@ -78,3 +78,30 @@ Grid
   flex-basis: 100%;
   max-width: 100%;
 }
+
+.landing-message {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.landing-message p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.landing-message .signature {
+  font-style: italic;
+  margin-top: 40px;
+}
+
+.landing-message strong {
+  font-weight: bold;
+}
+
+.landing-message em {
+  font-style: italic;
+  color: #b89214;
+}

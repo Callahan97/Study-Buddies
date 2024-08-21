@@ -12,7 +12,14 @@ const router = express.Router();
 router.get('/', rejectUnauthenticated, async (req, res) => {
   try {
     const userId = req.user.id;
-    const userQuery = `SELECT id, firstname, lastname, username, role FROM "user" WHERE id = $1`;
+
+    const userQuery = `
+      SELECT u.id, u.firstname, u.lastname, u.username, u.role, d.name as discipline
+      FROM "user" u
+      LEFT JOIN user_disciplines ud ON ud.user_id = u.id
+      LEFT JOIN disciplines d ON d.id = ud.discipline_id
+      WHERE u.id = $1
+    `;
 
     const userResult = await pool.query(userQuery, [userId]);
     const user = userResult.rows[0];

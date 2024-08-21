@@ -6,7 +6,7 @@ import './LandingPage.css';
 import RegisterForm from '../RegisterForm/RegisterForm';
 
 function LandingPage() {
-  const [heading, setHeading] = useState('Welcome');
+  const [heading, setHeading] = useState('Welcome to Study Buddies!');
   const history = useHistory();
 
   const onLogin = (event) => {
@@ -15,41 +15,28 @@ function LandingPage() {
 
   return (
     <div className="container">
-      <h2>{heading}</h2>
 
       <div className="grid">
         <div className="grid-col grid-col_8">
+        <div className="landing-message">
+        <h2>{heading}</h2>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-            id felis metus. Vestibulum et pulvinar tortor. Morbi pharetra lacus
-            ut ex molestie blandit. Etiam et turpis sit amet risus mollis
-            interdum. Suspendisse et justo vitae metus bibendum fringilla sed
-            sed justo. Aliquam sollicitudin dapibus lectus, vitae consequat odio
-            elementum eget. Praesent efficitur eros vitae nunc interdum, eu
-            interdum justo facilisis. Sed pulvinar nulla ac dignissim efficitur.
-            Quisque eget eros metus. Vestibulum bibendum fringilla nibh a
-            luctus. Duis a sapien metus.
+          Thank you for choosing Study Buddies for your tutelage needs. We are dedicated to providing a simple yet intuitive platform where tutors and tutees can connect and schedule study sessions.
           </p>
-
+  
           <p>
-            Praesent consectetur orci dui, id elementum eros facilisis id. Sed
-            id dolor in augue porttitor faucibus eget sit amet ante. Nunc
-            consectetur placerat pharetra. Aenean gravida ex ut erat commodo, ut
-            finibus metus facilisis. Nullam eget lectus non urna rhoncus
-            accumsan quis id massa. Curabitur sit amet dolor nisl. Proin
-            euismod, augue at condimentum rhoncus, massa lorem semper lacus, sed
-            lobortis augue mi vel felis. Duis ultrices sapien at est convallis
-            congue.
+          Our mission is guided by the motto: <strong><em>"Docendo Discimus"</em></strong> — which means, <strong>"by teaching, we learn."</strong> We believe that education is a two-way street, and not only do our tutees gain valuable knowledge, but our tutors also grow through the process of teaching and helping others.
           </p>
-
+  
           <p>
-            Fusce porta diam ac tortor elementum, ut imperdiet metus volutpat.
-            Suspendisse posuere dapibus maximus. Aliquam vitae felis libero. In
-            vehicula sapien at semper ultrices. Vivamus sed feugiat libero. Sed
-            sagittis neque id diam euismod, ut egestas felis ultricies. Nullam
-            non fermentum mauris. Sed in enim ac turpis faucibus pretium in sit
-            amet nisi.
+          We sincerely appreciate your trust in Study Buddies. While we currently serve the Rochester, MN area, we are excited about the future and plan to expand our services in the coming months.
           </p>
+  
+          <p className="signature">
+          Sincerely,<br></br>
+          <strong>Conor Callahan</strong>
+          </p>
+        </div>
         </div>
         <div className="grid-col grid-col_4">
           <RegisterForm />
