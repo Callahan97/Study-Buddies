@@ -33,15 +33,15 @@ function HomePage() {
           <span>End Time</span>
           <span>Duration</span>
           <span>{currentUser.role === 'tutor' ? 'Tutee' : 'Tutor'}</span>
-          <span>Actions</span> {/* Added Actions column */}
+          <span>Actions</span>
         </div>
 
         {bookedSessions.length > 0 ? (
           bookedSessions.map((session, index) => (
             <div key={index} className="table-row">
               <span>{moment(session.date).format('dddd, MMMM D, YYYY')}</span>
-              <span>{session.start_time}</span>
-              <span>{session.end_time}</span>
+              <span>{moment(session.start_time, "HH:mm:ss").format("h:mm A")}</span>
+              <span>{moment(session.end_time, "HH:mm:ss").format("h:mm A")}</span>
               <span>
                 {moment(session.end_time, "HH:mm:ss").diff(
                   moment(session.start_time, "HH:mm:ss"),

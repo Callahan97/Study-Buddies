@@ -116,8 +116,8 @@ function SchedulingDashboard() {
                   .filter((availability) => availability.day_of_week === day.dayOfWeek)
                   .map((availability, index) => (
                     <React.Fragment key={index}>
-                      <span>{availability.start_time}</span>
-                      <span>{availability.end_time}</span>
+                     <span>{moment(availability.start_time, "HH:mm:ss").format("h:mm A")}</span>
+                      <span>{moment(availability.end_time, "HH:mm:ss").format("h:mm A")}</span>
                       <span>
                       {moment(availability.end_time, "HH:mm:ss").diff(moment(availability.start_time, "HH:mm:ss"), 'minutes')} minutes
                       </span>

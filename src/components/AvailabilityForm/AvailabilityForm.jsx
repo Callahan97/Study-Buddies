@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import './AvailabilityForm.css';
+import moment from 'moment';
 
 function AvailabilityForm() {
   const dispatch = useDispatch();
@@ -42,7 +44,11 @@ function AvailabilityForm() {
 
   const handleInputChange = (index, field, value) => {
     const updatedAvailability = [...availability];
-    updatedAvailability[index][field] = value;
+    if (field === 'startTime' || field === 'endTime') {
+      updatedAvailability[index][field] = moment(value, 'HH:mm').format('HH:mm:ss');
+    } else {
+      updatedAvailability[index][field] = value;
+    }
     setAvailability(updatedAvailability);
   };
 
@@ -59,42 +65,63 @@ function AvailabilityForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="availability-form">
       <h3>Set Availability</h3>
-      {availability.map((slot, index) => (
-        <div key={index}>
-          <label>
-            <input
-              type="checkbox"
-              checked={slot.isEnabled}
-              onChange={() => handleCheckboxChange(index)}
-            />
-            {slot.day}
-          </label>
-          {slot.isEnabled && (
-            <div>
-              <input
-                type="time"
-                value={slot.startTime || ''}
-                onChange={(e) => handleInputChange(index, 'startTime', e.target.value)}
-                placeholder="Start Time"
-              />
-              <input
-                type="time"
-                value={slot.endTime || ''}
-                onChange={(e) => handleInputChange(index, 'endTime', e.target.value)}
-                placeholder="End Time"
-              />
-              <input
-                type="number"
-                value={slot.duration || ''}
-                onChange={(e) => handleInputChange(index, 'duration', e.target.value)}
-                placeholder="Duration (in minutes)"
-              />
-            </div>
-          )}
-        </div>
-      ))}
+      <table className="availability-table">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Enable</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Duration (minutes)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {availability.map((slot, index) => (
+            <tr key={index}>
+              <td>{slot.day}</td>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={slot.isEnabled}
+                  onChange={() => handleCheckboxChange(index)}
+                />
+              </td>
+              <td>
+                {slot.isEnabled && (
+                  <input
+                    type="time"
+                    value={slot.startTime ? moment(slot.startTime, 'HH:mm:ss').format('HH:mm') : ''}
+                    onChange={(e) => handleInputChange(index, 'startTime', e.target.value)}
+                    placeholder="Start Time"
+                  />
+                )}
+              </td>
+              <td>
+                {slot.isEnabled && (
+                  <input
+                    type="time"
+                    value={slot.endTime ? moment(slot.endTime, 'HH:mm:ss').format('HH:mm') : ''}
+                    onChange={(e) => handleInputChange(index, 'endTime', e.target.value)}
+                    placeholder="End Time"
+                  />
+                )}
+              </td>
+              <td>
+                {slot.isEnabled && (
+                  <input
+                    type="number"
+                    value={slot.duration || ''}
+                    onChange={(e) => handleInputChange(index, 'duration', e.target.value)}
+                    placeholder="Duration"
+                  />
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <button className="btn" type="submit">Save Availability</button>
     </form>
   );

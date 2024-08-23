@@ -1,0 +1,46 @@
+.availability-form {
+    margin: 20px;
+  }
+  
+  .availability-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  
+  .availability-table th,
+  .availability-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .availability-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .availability-table td input[type="time"],
+  .availability-table td input[type="number"] {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+  
+  .availability-table td input[type="checkbox"] {
+    margin: auto;
+  }
+  
+  .btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .btn:hover {
+    background-color: #0056b3;
+  }
