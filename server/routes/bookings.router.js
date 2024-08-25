@@ -31,4 +31,21 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     });
 });
 
+
+router.delete('/:id', rejectUnauthenticated, (req, res) => {
+  const bookingId = req.params.id;
+
+  const queryText = `
+    DELETE FROM bookings
+    WHERE id = $1 AND (tutor_id = $2 OR tutee_id = $2)
+  `;
+
+  pool.query(queryText, [bookingId, req.user.id])
+    .then(() => res.sendStatus(204))
+    .catch((error) => {
+      console.error('Error deleting booking:', error);
+      res.sendStatus(500);
+    });
+});
+
 module.exports = router;

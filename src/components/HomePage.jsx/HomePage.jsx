@@ -22,6 +22,15 @@ function HomePage() {
     console.log('Booked sessions:', bookedSessions); 
   }, [bookedSessions]);
 
+  const handleDelete = (bookingId) => {
+    if (window.confirm("Are you sure you want to cancel this session?")) {
+      dispatch({
+        type: 'DELETE_BOOKED_SESSION',
+        payload: bookingId,
+      });
+    }
+  };
+
   return (
     <div className="homepage">
       <h2 className="page-title">Upcoming Booked Sessions</h2>
@@ -56,7 +65,8 @@ function HomePage() {
               </span>
               <span>
               
-                <button className="delete-button">Cancel Session</button>
+                <button className="delete-button" onClick={() => handleDelete(session.id)}
+                >Cancel Session</button>
               </span> 
             </div>
           ))
