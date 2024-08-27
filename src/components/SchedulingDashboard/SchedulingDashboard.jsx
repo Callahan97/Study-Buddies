@@ -35,6 +35,14 @@ function SchedulingDashboard() {
     const dayIndex = moment().day(availability.day_of_week).day();
     const date = currentWeekStart.clone().add(dayIndex, 'days').format('YYYY-MM-DD');
   
+    const formattedStartTime = moment(availability.start_time, "HH:mm:ss").format("h:mm A");
+    const formattedEndTime = moment(availability.end_time, "HH:mm:ss").format("h:mm A");
+  
+    const confirmBooking = window.confirm(
+      `Are you sure you want to book this session on ${date} from ${formattedStartTime} to ${formattedEndTime}?`
+    );
+  
+    if (confirmBooking) {
     const bookingDetails = {
       tutor_id: availability.tutor_id,
       tutee_id: currentUser.id,
@@ -47,6 +55,16 @@ function SchedulingDashboard() {
       type: 'BOOK_SESSION',
       payload: bookingDetails,
     });
+  
+    dispatch({
+      type: 'REMOVE_BOOKED_SESSION',
+      payload: {
+      tutor_id: availability.tutor_id,
+      start_time: availability.start_time,
+      end_time: availability.end_time,
+        }
+      });
+    }
   };
   
   const handleNextWeek = () => {

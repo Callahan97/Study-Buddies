@@ -6,11 +6,21 @@ const availabilityReducer = (state = { availability: [], tutorAvailability: [] }
     case 'SET_TUTOR_AVAILABILITY':
       return { 
         ...state, 
-        tutorAvailability: [...state.tutorAvailability, ...action.payload] // Append new data to the existing array
+        tutorAvailability: action.payload 
+      };
+    case 'REMOVE_BOOKED_SESSION':
+      return {
+        ...state,
+        tutorAvailability: state.tutorAvailability.filter(
+          session => 
+            session.tutor_id !== action.payload.tutor_id ||
+            session.start_time !== action.payload.start_time ||
+            session.end_time !== action.payload.end_time
+        )
       };
       
     case 'CLEAR_AVAILABILITY':
-      return { ...state, availability: [], tutorAvailability: [] }; // Clear both arrays
+      return { ...state, availability: [], tutorAvailability: [] };
       
     default:
       return state;

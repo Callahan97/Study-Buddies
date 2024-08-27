@@ -31,6 +31,24 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     });
 });
 
+router.post('/', rejectUnauthenticated, (req, res) => {
+  const { tutor_id, tutee_id, start_time, end_time, date } = req.body;
+
+  const queryText = `
+    INSERT INTO bookings (tutor_id, tutee_id, start_time, end_time, date)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING id;
+  `;
+  
+  pool.query(queryText, [tutor_id, tutee_id, start_time, end_time, date])
+    .then(result => res.status(201).json({ bookingId: result.rows[0].id }))
+    .catch(error => {
+      console.error('Error creating booking:', error);
+      res.sendStatus(500);
+    });
+});
+
+module.exports = router;
 
 router.delete('/:id', rejectUnauthenticated, (req, res) => {
   const bookingId = req.params.id;
