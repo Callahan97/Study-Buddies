@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import './SchedulingDashboard.css';
+import './SchedulingDashBoard.css';
 
 function SchedulingDashboard() {
   const dispatch = useDispatch();
