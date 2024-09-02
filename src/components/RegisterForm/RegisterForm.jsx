@@ -39,9 +39,9 @@ function RegisterForm() {
       )}
       <div>
         <label htmlFor="username">
-          Email:
           <input
             type="text"
+            placeholder='Email'
             name="username"
             value={username}
             required
@@ -51,9 +51,9 @@ function RegisterForm() {
       </div>
       <div>
         <label htmlFor="firstname">
-          First name:
           <input
             type="text"
+            placeholder="First Name"
             name="First name"
             value={firstname}
             required
@@ -63,9 +63,9 @@ function RegisterForm() {
       </div>
       <div>
         <label htmlFor="lastname">
-          Last name:
           <input
             type="text"
+            placeholder="Last Name"
             name="Last name"
             value={lastname}
             required
@@ -75,9 +75,9 @@ function RegisterForm() {
       </div>
       <div>
         <label htmlFor="password">
-          Password:
           <input
             type="password"
+            placeholder="Password"
             name="password"
             value={password}
             required
@@ -86,7 +86,7 @@ function RegisterForm() {
         </label>
       </div>
       <div className="role-selection">
-        <label>Role: </label>
+        <label>Role:</label>
         <button
           type="button"
           className={`role-button ${role === 'tutee' ? 'selected' : ''}`}

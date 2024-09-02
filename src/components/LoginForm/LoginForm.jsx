@@ -33,10 +33,10 @@ function LoginForm() {
         </h3>
       )}
       <div>
-        <label htmlFor="username">
-            Email:   
+        <label htmlFor="username">   
           <input
             type="text"
+            placeholder="Email"
             name="username"
             required
             value={username}
@@ -46,9 +46,9 @@ function LoginForm() {
       </div>
       <div>
         <label htmlFor="password">
-          Password:
           <input
             type="password"
+            placeholder="Password"
             name="password"
             required
             value={password}

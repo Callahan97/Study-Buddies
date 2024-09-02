@@ -31,3 +31,10 @@
   .role-button.selected:hover {
     background-color: #0069d9;
   }
+
+  .formPanel {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
